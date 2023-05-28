@@ -1,37 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:roll_dice/styled_text.dart';
 
 import 'enums.dart';
 
-Alignment startAlignment = Alignment.topLeft;
-Alignment endAlignment = Alignment.bottomRight;
-Alignment centerAlignment = Alignment.center;
+const Alignment startAlignment = Alignment.topLeft;
+const Alignment endAlignment = Alignment.bottomRight;
+const Alignment centerAlignment = Alignment.center;
+const Widget defaultChild = SizedBox();
+
+const List<Color> defaultColors = [Colors.white];
 
 class GradientContainer extends StatelessWidget {
-  GradientContainer({super.key, GradientType gradientType = GradientType.linear}) : _gradientType = gradientType;
+  const GradientContainer({
+    super.key,
+    this.gradientType = GradientType.linear,
+    this.gradientColors = defaultColors,
+    this.child = defaultChild,
+  });
 
-  final GradientType _gradientType;
+  const GradientContainer.linear({super.key, this.gradientColors = defaultColors, this.child = defaultChild})
+      : gradientType = GradientType.linear;
+  const GradientContainer.circle({super.key, this.gradientColors = defaultColors, this.child = defaultChild})
+      : gradientType = GradientType.circle;
 
-  final List<Color> gradientColors = [
-    Colors.blue,
-    Colors.green,
-    Colors.yellow,
-    Colors.orange,
-    Colors.red,
-    const Color.fromARGB(255, 76, 9, 4),
-    Colors.black
-  ];
+  final GradientType gradientType;
+  final List<Color> gradientColors;
+  final Widget child;
+
+  final String activeDiceImage = 'assets/images/dice-1.png';
 
   @override
   Widget build(BuildContext context) => Container(
-        decoration:
-            _gradientType == GradientType.linear ? getGradientLinearDecoration() : getGradientCircleDecoration(),
-        child: const Center(
-          child: StyledText(
-            'Hello World Old',
-          ),
-        ),
-      );
+      decoration: gradientType == GradientType.linear ? getGradientLinearDecoration() : getGradientCircleDecoration(),
+      child: child);
 
   List<double> getGradientStops({start = 0, end = 1}) {
     List<double> stops = [];
