@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_app/screens/welcome_screen.dart';
 import 'package:quiz_app/widgets/gradient_container.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) => const MaterialApp(
+void main() => runApp(
+      const MaterialApp(
         home: Scaffold(
           body: GradientContainer.linear(
-            gradientColors: [Colors.cyan, Colors.blue],
-            child: Text('Hello World'),
+            gradientColors: [Color.fromARGB(255, 135, 215, 225), Colors.cyan, Colors.blue],
+            child: Center(child: WelcomeScreen()),
           ),
         ),
-      );
-}
+      ),
+    );
