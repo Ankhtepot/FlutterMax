@@ -1,1 +1,0 @@
-enum GradientType { linear, circle }

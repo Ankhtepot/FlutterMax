@@ -1,22 +1,14 @@
 import 'package:flutter/material.dart';
 
-import 'enums.dart';
-
 const Alignment startAlignment = Alignment.topLeft;
 const Alignment endAlignment = Alignment.bottomRight;
 const Alignment centerAlignment = Alignment.center;
 const Widget defaultChild = SizedBox();
-
 const List<Color> defaultColors = [Colors.white];
 
-class GradientContainer extends StatelessWidget {
-  const GradientContainer({
-    super.key,
-    this.gradientType = GradientType.linear,
-    this.gradientColors = defaultColors,
-    this.child = defaultChild,
-  });
+enum GradientType { linear, circle }
 
+class GradientContainer extends StatelessWidget {
   const GradientContainer.linear({super.key, this.gradientColors = defaultColors, this.child = defaultChild})
       : gradientType = GradientType.linear;
   const GradientContainer.circle({super.key, this.gradientColors = defaultColors, this.child = defaultChild})

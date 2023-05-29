@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class Styles {
@@ -20,5 +19,22 @@ class Styles {
             borderRadius: BorderRadius.circular(roundStrength), // Set the border radius
           ),
         ),
+      );
+
+  static ButtonStyle getButtonStadiumBorder({
+    final Color borderColor = Colors.white,
+    final Color backgroundColor = Colors.transparent,
+    final Color foregroundColor = Colors.white,
+    final double borderWidth = 5.0,
+    final double edgeInset = 20,
+    final double paddingInsetVertical = 10,
+    final double paddingInsetHorizontal = 30,
+  }) =>
+      OutlinedButton.styleFrom(
+        foregroundColor: foregroundColor,
+        backgroundColor: backgroundColor,
+        side: BorderSide(color: borderColor, width: borderWidth),
+        shape: const StadiumBorder(),
+        padding: EdgeInsets.symmetric(horizontal: paddingInsetHorizontal, vertical: paddingInsetVertical),
       );
 }
