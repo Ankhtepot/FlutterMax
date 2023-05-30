@@ -16,17 +16,15 @@ class QuestionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SizedBox(
         width: double.infinity,
-        child: Expanded(
-          child: TextButton(
-            onPressed: () => onButtonPressed(text),
-            style: Styles.getButtonStadiumBorder(
-              backgroundColor: const Color.fromARGB(255, 47, 6, 210),
-              borderColor: Colors.blue,
-            ),
-            child: StyledText(
-              text,
-              fontSize: 15,
-            ),
+        child: TextButton(
+          onPressed: () => onButtonPressed(text),
+          style: Styles.getButtonStadiumBorder(
+            backgroundColor: const Color.fromARGB(255, 47, 6, 210),
+            borderColor: Colors.blue,
+          ),
+          child: StyledText(
+            text,
+            fontSize: 15,
           ),
         ),
       );

@@ -4,9 +4,6 @@ import 'package:quiz_app/general/data.dart';
 import 'package:quiz_app/screens/questions_screen.dart';
 import 'package:quiz_app/screens/start_screen.dart';
 
-Widget startScreen = const StartScreen();
-Widget questionsScreen = const QuestionsScreen();
-
 class Quiz extends StatefulWidget {
   const Quiz({super.key});
 
@@ -15,12 +12,31 @@ class Quiz extends StatefulWidget {
 }
 
 class _QuizState extends State<Quiz> {
+  Widget? startScreen;
+  Widget? questionsScreen;
+  Widget? activeScreen;
+
   @override
-  Widget build(context) => const MaterialApp(
+  void initState() {
+    startScreen = StartScreen(switchScreen);
+    questionsScreen = const QuestionsScreen();
+    activeScreen = startScreen;
+
+    super.initState();
+  }
+
+  void switchScreen() {
+    setState(() {
+      activeScreen = activeScreen == startScreen ? questionsScreen : startScreen;
+    });
+  }
+
+  @override
+  Widget build(context) => MaterialApp(
         home: Scaffold(
           body: GradientContainer.linear(
             gradientColors: gradientColors,
-            child: Center(child: StartScreen()),
+            child: activeScreen ?? Container(),
           ),
         ),
       );
