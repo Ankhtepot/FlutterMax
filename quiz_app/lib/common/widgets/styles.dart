@@ -26,7 +26,6 @@ class Styles {
     final Color backgroundColor = Colors.transparent,
     final Color foregroundColor = Colors.white,
     final double borderWidth = 5.0,
-    final double edgeInset = 20,
     final double paddingInsetVertical = 10,
     final double paddingInsetHorizontal = 30,
   }) =>

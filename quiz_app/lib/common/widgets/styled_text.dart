@@ -10,6 +10,7 @@ class StyledText extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Text(
         text,
+        textAlign: TextAlign.center,
         style: TextStyle(
           fontSize: fontSize,
           color: color,
