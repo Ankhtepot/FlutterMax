@@ -5,7 +5,7 @@ import 'package:quiz_app/common/widgets/styles.dart';
 class StartScreen extends StatelessWidget {
   const StartScreen(this.onButtonPressed, {super.key});
 
-  final void Function() onButtonPressed;
+  final void Function(String) onButtonPressed;
 
   @override
   Widget build(BuildContext context) => Center(
@@ -21,10 +21,11 @@ class StartScreen extends StatelessWidget {
             const StyledText(
               'Learn Flutter the fun way!',
               fontSize: 20,
+              fontFamilly: 'Lato',
             ),
             const SizedBox(height: 30),
             OutlinedButton.icon(
-              onPressed: onButtonPressed,
+              onPressed: () => onButtonPressed('questions-screen'),
               style: Styles.getButtonStadiumBorder(),
               icon: const Icon(Icons.arrow_right_alt, color: Colors.white, size: 30),
               label: const StyledText(
@@ -35,8 +36,4 @@ class StartScreen extends StatelessWidget {
           ],
         ),
       );
-
-  void onPressed() {
-    debugPrint('Button pressed');
-  }
 }

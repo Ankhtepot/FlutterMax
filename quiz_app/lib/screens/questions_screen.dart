@@ -9,18 +9,22 @@ import 'package:quiz_app/widgets/answer_button.dart';
 Random random = Random();
 
 class QuestionsScreen extends StatefulWidget {
-  const QuestionsScreen({super.key});
+  const QuestionsScreen(this.onSelectAnswer, {super.key});
+
+  final void Function(String) onSelectAnswer;
 
   @override
-  State<QuestionsScreen> createState() => _QuestionsScreenState();
+  State<QuestionsScreen> createState() {
+    return _QuestionsScreenState();
+  }
 }
 
 class _QuestionsScreenState extends State<QuestionsScreen> {
   List<QuizQuestion> questionsList = List.from(questions);
   QuizQuestion currentQuestion = questions[0];
 
-  int answeredQuestions = 0;
-  List<String> score = [];
+  int currentQuestionIndex = 0;
+  List<String> answers = [];
 
   @override
   void initState() {
@@ -39,7 +43,9 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
             children: [
               StyledText(
                 currentQuestion.question,
-                fontSize: 27,
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                fontFamilly: 'Lato',
               ),
               const SizedBox(height: 30),
               ...getButtons(),
@@ -49,14 +55,16 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
       );
 
   void onPressed(String text) {
-    debugPrint('clicked answer: $text');
-    score.add(text);
-    currentQuestion = questionsList[min(++answeredQuestions, questionsList.length - 1)];
+    widget.onSelectAnswer(text);
+
+    if (currentQuestionIndex == questionsList.length - 1) {
+      debugPrint('Quiz is finished');
+      return;
+    }
+
+    currentQuestion = questionsList[min(++currentQuestionIndex, questionsList.length - 1)];
+
     setState(() {
-      if (answeredQuestions == questionsList.length) {
-        debugPrint('Quiz finished');
-        debugPrint('Score: $score');
-      }
     });
   }
 
