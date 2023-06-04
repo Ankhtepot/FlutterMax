@@ -15,6 +15,7 @@ class Quiz extends StatefulWidget {
 
 class _QuizState extends State<Quiz> {
   final List<String> selectedAnswers = [];
+  List<Color> activeGradientColors = gradientColors;
 
   String activeScreen = 'start-screen';
 
@@ -29,8 +30,10 @@ class _QuizState extends State<Quiz> {
   }
 
   void chooseAnswer(String answer) {
-    setState(() => selectedAnswers.add(answer));
-    
+    setState(() {
+      selectedAnswers.add(answer);
+    });
+
     if (selectedAnswers.length == questions.length) {
       activeScreen = 'result-screen';
     }
@@ -40,22 +43,22 @@ class _QuizState extends State<Quiz> {
   Widget build(context) => MaterialApp(
         home: Scaffold(
           body: GradientContainer.linear(
-            gradientColors: gradientColors,
+            gradientColors: activeScreen == 'result-screen' ? darkBlueGradientColors : gradientColors,
             child: selectScreen(),
           ),
         ),
       );
 
   Widget selectScreen() {
-      switch (activeScreen) {
-        case 'start-screen':
-          return StartScreen(switchScreen);
-        case 'questions-screen':
-          return QuestionsScreen(chooseAnswer);
-        case 'result-screen':
-          return ResultScreen(switchScreen, selectedAnswers);
-        default:
-            return StartScreen(switchScreen);
-      }
+    switch (activeScreen) {
+      case 'start-screen':
+        return StartScreen(switchScreen);
+      case 'questions-screen':
+        return QuestionsScreen(chooseAnswer);
+      case 'result-screen':
+        return ResultScreen(switchScreen, selectedAnswers);
+      default:
+        return StartScreen(switchScreen);
+    }
   }
 }
