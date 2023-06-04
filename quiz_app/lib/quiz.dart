@@ -14,7 +14,7 @@ class Quiz extends StatefulWidget {
 }
 
 class _QuizState extends State<Quiz> {
-  final List<String> selectedAnswers = [];
+  final List<String> _selectedAnswers = [];
   List<Color> activeGradientColors = gradientColors;
 
   String activeScreen = 'start-screen';
@@ -22,7 +22,7 @@ class _QuizState extends State<Quiz> {
   void switchScreen(String screen) {
     setState(() {
       if (screen == 'questions-screen') {
-        selectedAnswers.clear();
+        _selectedAnswers.clear();
       }
 
       activeScreen = screen;
@@ -31,10 +31,10 @@ class _QuizState extends State<Quiz> {
 
   void chooseAnswer(String answer) {
     setState(() {
-      selectedAnswers.add(answer);
+      _selectedAnswers.add(answer);
     });
 
-    if (selectedAnswers.length == questions.length) {
+    if (_selectedAnswers.length == questions.length) {
       activeScreen = 'result-screen';
     }
   }
@@ -56,7 +56,7 @@ class _QuizState extends State<Quiz> {
       case 'questions-screen':
         return QuestionsScreen(chooseAnswer);
       case 'result-screen':
-        return ResultScreen(switchScreen, selectedAnswers);
+        return ResultScreen(switchScreen, _selectedAnswers);
       default:
         return StartScreen(switchScreen);
     }

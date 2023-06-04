@@ -14,9 +14,7 @@ class QuestionsScreen extends StatefulWidget {
   final void Function(String) onSelectAnswer;
 
   @override
-  State<QuestionsScreen> createState() {
-    return _QuestionsScreenState();
-  }
+  State<QuestionsScreen> createState() => _QuestionsScreenState();
 }
 
 class _QuestionsScreenState extends State<QuestionsScreen> {
@@ -64,13 +62,12 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
 
     currentQuestion = questionsList[min(++currentQuestionIndex, questionsList.length - 1)];
 
-    setState(() {
-    });
+    setState(() {});
   }
 
   List<Widget> getButtons() {
     final List<Widget> buttons = [];
-    final List<String> shuffledAnswers = currentQuestion.getShuffledAnswers();
+    final List<String> shuffledAnswers = currentQuestion.shuffledAnswers;
 
     for (final answer in shuffledAnswers..shuffle(random)) {
       buttons.add(AnswerButton(answer, onButtonPressed: onPressed));

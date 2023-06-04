@@ -12,17 +12,11 @@ class ResultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int correctAnswers = 0;
+    final int correctAnswers =
+        answers.asMap().entries.where((answer) => answer.value == questions[answer.key].answers[0]).length;
     final int numberOfQuestions = questions.length;
 
-    debugPrint(answers.toString());
-    for (int i = 0; i < answers.length; i++) {
-      if (answers[i] == questions[i].answers[0]) {
-        correctAnswers++;
-      }
-    }
-
-    List<Widget> getResults() {
+    Widget getResults() {
       final List<Widget> results = [];
 
       for (int i = 0; i < answers.length; i++) {
@@ -32,12 +26,20 @@ class ResultScreen extends StatelessWidget {
           correctAnswer: questions[i].answers[0],
           userAnswer: answers[i],
         ));
+        
         if (i != answers.length - 1) {
           results.add(const SizedBox(height: 10));
         }
       }
 
-      return results;
+      return SizedBox(
+        height: 350,
+        child: SingleChildScrollView(
+          child: Column(
+            children: results,
+          ),
+        ),
+      );
     }
 
     return Center(
@@ -53,7 +55,7 @@ class ResultScreen extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
             const SizedBox(height: 30),
-            ...getResults(),
+            getResults(),
             const SizedBox(height: 30),
             OutlinedButton.icon(
               onPressed: () => onButtonPressed('questions-screen'),
