@@ -28,6 +28,7 @@ class _ExpensesState extends State<Expenses> {
   @override
   Widget build(context) => Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.blue,
           title: const Text('Flutter ExpensesTracker'),
           actions: [
             IconButton(
@@ -37,7 +38,7 @@ class _ExpensesState extends State<Expenses> {
           ],
         ),
         body: GradientContainer.linear(
-          gradientColors: gradientColors,
+          gradientColors: gradientColorsMainBackground,
           child: Column(
             children: [
               const Text('The Chart'),
