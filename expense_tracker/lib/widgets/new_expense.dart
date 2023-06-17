@@ -12,6 +12,16 @@ class _NewExpenseState extends State<NewExpense> {
   final _amountController = TextEditingController();
   final _dateController = TextEditingController();
 
+  void _presentDayPicker() {
+    final now = DateTime.now();
+    showDatePicker(
+      context: context,
+      initialDate: now,
+      firstDate: DateTime(now.year - 1, 1, 1),
+      lastDate: now,
+    );
+  }
+
   @override
   void dispose() {
     _titleController.dispose();
@@ -31,33 +41,42 @@ class _NewExpenseState extends State<NewExpense> {
             maxLength: 50,
             decoration: const InputDecoration(labelText: 'Title'),
           ),
-          TextField(
-            controller: _amountController,
-            keyboardType: TextInputType.number,
-            maxLength: 10,
-            decoration: const InputDecoration(
-              labelText: 'Amount',
-              prefixText: '\$',
-            ),
-          ),
-          TextField(
-            controller: _dateController,
-            keyboardType: TextInputType.datetime,
-            decoration: const InputDecoration(labelText: 'Date'),
-          ),
           Row(
             children: [
-              const Text('No date chosen'),
-              TextButton(
-                onPressed: () {},
-                child: const Text('Choose date'),
+              Expanded(
+                child: TextField(
+                  controller: _amountController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    labelText: 'Amount',
+                    prefixText: '\$',
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16.0),
+              Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const Text('Selected Date'),
+                    IconButton(
+                      onPressed: _presentDayPicker,
+                      icon: const Icon(
+                        Icons.calendar_month,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
           Row(
             children: [
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pop(context);
+                },
                 child: const Text('Cancel'),
               ),
               ElevatedButton(
