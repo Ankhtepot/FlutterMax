@@ -9,10 +9,15 @@ class NewExpense extends StatefulWidget {
 
 class _NewExpenseState extends State<NewExpense> {
   final _titleController = TextEditingController();
+  final _amountController = TextEditingController();
+  final _dateController = TextEditingController();
 
   @override
   void dispose() {
     _titleController.dispose();
+    _amountController.dispose();
+    _dateController.dispose();
+
     super.dispose();
   }
 
@@ -26,34 +31,44 @@ class _NewExpenseState extends State<NewExpense> {
             maxLength: 50,
             decoration: const InputDecoration(labelText: 'Title'),
           ),
-          Row(
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  print(_titleController.text);
-                },
-                child: const Text('Save Expense'),
-              ),
-            ],
+          TextField(
+            controller: _amountController,
+            keyboardType: TextInputType.number,
+            maxLength: 10,
+            decoration: const InputDecoration(
+              labelText: 'Amount',
+              prefixText: '\$',
+            ),
           ),
           TextField(
-            decoration: const InputDecoration(labelText: 'Amount'),
-          ),
-          TextField(
+            controller: _dateController,
+            keyboardType: TextInputType.datetime,
             decoration: const InputDecoration(labelText: 'Date'),
           ),
           Row(
             children: [
-              Text('No date chosen'),
+              const Text('No date chosen'),
               TextButton(
                 onPressed: () {},
                 child: const Text('Choose date'),
               ),
             ],
           ),
-          ElevatedButton(
-            onPressed: () {},
-            child: const Text('Add expense'),
+          Row(
+            children: [
+              TextButton(
+                onPressed: () {},
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  print(_titleController.text);
+                  print(_amountController.text);
+                  print(_dateController.text);
+                },
+                child: const Text('Save Expense'),
+              ),
+            ],
           ),
         ],
       ));
