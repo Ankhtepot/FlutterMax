@@ -5,7 +5,9 @@ import 'package:intl/intl.dart';
 final formatter = DateFormat('dd/MM/yyyy');
 
 class NewExpense extends StatefulWidget {
-  const NewExpense({super.key});
+  const NewExpense(this.onAddExpense, {super.key});
+
+  final void Function(Expense) onAddExpense;
 
   @override
   State<NewExpense> createState() => _NewExpenseState();
@@ -33,6 +35,64 @@ class _NewExpenseState extends State<NewExpense> {
     });
   }
 
+  void _submitExpenseData() {
+    final enteredTitle = _titleController.text.trim();
+
+    if (enteredTitle.isEmpty) {
+      // error
+    }
+
+    final enteredAmount = double.tryParse(_amountController.text);
+    bool amountIsInvalid = enteredAmount == null || enteredAmount <= 0;
+
+    if (amountIsInvalid) {
+      //error
+    }
+
+    if (_selectedDate == null) {
+      // error
+    }
+
+    if (enteredTitle.isEmpty || amountIsInvalid || _selectedDate == null) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Invalid input'),
+          content: const Text('Please make sure a valid title, amount, date and category was entered.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Okay'),
+            ),
+          ],
+        ),
+      );
+
+      return;
+    }
+
+    widget.onAddExpense(
+      Expense(
+        title: enteredTitle,
+        amount: enteredAmount,
+        date: _selectedDate!,
+        category: _selectedCategory,
+      ),
+    );
+    Navigator.pop(context);
+    // OR
+    // Navigator.of(context).pop(
+    //   Expense(
+    //     title: enteredTitle,
+    //     amount: enteredAmount,
+    //     date: _selectedDate!,
+    //     category: _selectedCategory,
+    //   ),
+    // );
+  }
+
   @override
   void dispose() {
     _titleController.dispose();
@@ -44,7 +104,7 @@ class _NewExpenseState extends State<NewExpense> {
 
   @override
   Widget build(context) => Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.fromLTRB(16, 48, 16, 0),
       child: ListView(
         children: [
           TextField(
@@ -114,12 +174,7 @@ class _NewExpenseState extends State<NewExpense> {
                 child: const Text('Cancel'),
               ),
               ElevatedButton(
-                onPressed: () {
-                  print(_titleController.text);
-                  print(_amountController.text);
-                  print(formatter.format(_selectedDate!));
-                  print(_selectedCategory);
-                },
+                onPressed: _submitExpenseData,
                 child: const Text('Save Expense'),
               ),
             ],
