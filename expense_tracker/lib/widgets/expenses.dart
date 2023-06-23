@@ -1,4 +1,5 @@
 import 'package:expense_tracker/common/widgets/gradient_container.dart';
+import 'package:expense_tracker/common/widgets/styled_text.dart';
 import 'package:expense_tracker/data/colors.dart';
 import 'package:expense_tracker/models/expense.dart';
 import 'package:expense_tracker/widgets/expenses_list/expenses_list.dart';
@@ -40,33 +41,62 @@ class _ExpensesState extends State<Expenses> {
   }
 
   void _removeExpense(Expense expense) {
+    final expenseIndex = _registeredExpenses.indexOf(expense);
     setState(() {
       _registeredExpenses.remove(expense);
     });
+
+    ScaffoldMessenger.of(context).clearSnackBars();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const StyledText('Expense removed'),
+        duration: const Duration(seconds: 3),
+        action: SnackBarAction(
+          label: 'UNDO',
+          onPressed: () {
+            setState(() {
+              _registeredExpenses.insert(expenseIndex, expense);
+            });
+          },
+        ),
+      ),
+    );
   }
 
   @override
-  Widget build(context) => Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.blue,
-          title: const Text('Flutter ExpensesTracker'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: _openAddExpenseDialog,
-            ),
-          ],
-        ),
-        body: GradientContainer.linear(
-          gradientColors: gradientColorsMainBackground,
-          child: Column(
-            children: [
-              const Text('The Chart'),
-              Expanded(
-                child: ExpensesList(_registeredExpenses, _removeExpense),
-              ),
-            ],
+  Widget build(context) {
+    Widget mainContent = const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text('No expenses found. Start adding some!'),
+        ],
+      ),
+    );
+
+    if (_registeredExpenses.isNotEmpty) {
+      mainContent = ExpensesList(_registeredExpenses, _removeExpense);
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Flutter ExpensesTracker'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: _openAddExpenseDialog,
           ),
-        ),
-      );
+        ],
+      ),
+      body: Column(
+        children: [
+          const Text('The Chart'),
+          Expanded(
+            child: mainContent,
+          ),
+        ],
+      ),
+    );
+  }
 }
