@@ -63,8 +63,7 @@ class _ExpensesState extends State<Expenses> {
     );
   }
 
-  @override
-  Widget build(context) {
+  Widget get getMainContent {
     Widget mainContent = const Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -78,6 +77,21 @@ class _ExpensesState extends State<Expenses> {
       mainContent = ExpensesList(_registeredExpenses, _removeExpense);
     }
 
+    return mainContent;
+  }
+
+  List<Widget> get DrawChart => [
+      Expanded(child: Chart(expenses: _registeredExpenses)),
+      Expanded(
+        child: getMainContent,
+      ),
+    ];
+
+  @override
+  Widget build(context) {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Flutter ExpensesTracker'),
@@ -88,14 +102,13 @@ class _ExpensesState extends State<Expenses> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Chart(expenses: _registeredExpenses),
-          Expanded(
-            child: mainContent,
-          ),
-        ],
-      ),
+      body: width < 600
+          ? Column(
+              children: DrawChart,
+            )
+          : Row(
+              children: DrawChart,
+            ),
     );
   }
 }
