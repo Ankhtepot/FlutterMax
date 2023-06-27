@@ -20,6 +20,7 @@ class _ExpensesState extends State<Expenses> {
 
   void _openAddExpenseDialog() {
     showModalBottomSheet(
+      useSafeArea: true,
       isScrollControlled: true,
       context: context,
       builder: (ctx) => NewExpense(_addNewExpense),
@@ -81,11 +82,11 @@ class _ExpensesState extends State<Expenses> {
   }
 
   List<Widget> get DrawChart => [
-      Expanded(child: Chart(expenses: _registeredExpenses)),
-      Expanded(
-        child: getMainContent,
-      ),
-    ];
+        Expanded(child: Chart(expenses: _registeredExpenses)),
+        Expanded(
+          child: getMainContent,
+        ),
+      ];
 
   @override
   Widget build(context) {
