@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:expense_tracker/models/expense.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
 final formatter = DateFormat('dd/MM/yyyy');
@@ -54,22 +57,7 @@ class _NewExpenseState extends State<NewExpense> {
     }
 
     if (enteredTitle.isEmpty || amountIsInvalid || _selectedDate == null) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Invalid input'),
-          content: const Text('Please make sure a valid title, amount, date and category was entered.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Okay'),
-            ),
-          ],
-        ),
-      );
-
+      _showDialog();
       return;
     }
 
@@ -91,6 +79,42 @@ class _NewExpenseState extends State<NewExpense> {
     //     category: _selectedCategory,
     //   ),
     // );
+  }
+
+  void _showDialog() {
+    if (Platform.isIOS) {
+      showCupertinoDialog(
+        context: context,
+        builder: (context) => CupertinoAlertDialog(
+          title: const Text('Invalid input'),
+          content: const Text('Please make sure a valid title, amount, date and category was entered.'),
+          actions: [
+            CupertinoDialogAction(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Okay'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Invalid input'),
+          content: const Text('Please make sure a valid title, amount, date and category was entered.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Okay'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   @override
