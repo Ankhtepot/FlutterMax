@@ -19,7 +19,7 @@ class Meals extends StatelessWidget {
               itemBuilder: (context, index) {
                 final meal = meals[index];
                 return ListTile(
-                  tileColor: Colors.white,
+                  tileColor: Color.fromARGB(255, 255 - index * 5, 255 - index * 5, 255 - index * 5),
                   title: Text(meal.title),
                   onTap: () {
                     print('Meals: ${meal.title}');
@@ -27,9 +27,26 @@ class Meals extends StatelessWidget {
                 );
               },
             )
-          : const Card(
+          : Card(
               child: Center(
-                child: Text('No meals found.'),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'No meals found.',
+                      style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                            color: Theme.of(context).colorScheme.onBackground,
+                          ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Try selecting different category',
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            color: Theme.of(context).colorScheme.onBackground,
+                          ),
+                    ),
+                  ],
+                ),
               ),
             ),
     );
