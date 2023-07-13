@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:meals_app/models/meal.dart';
+import 'package:meals_app/widgets/meal_item.dart';
 
-class Meals extends StatelessWidget {
-  const Meals(this.title, this.meals, {super.key});
+class MealsScreen extends StatelessWidget {
+  const MealsScreen(this.title, this.meals, {super.key});
 
   final String title;
   final List<Meal> meals;
@@ -17,14 +18,7 @@ class Meals extends StatelessWidget {
           ? ListView.builder(
               itemCount: meals.length,
               itemBuilder: (context, index) {
-                final meal = meals[index];
-                return ListTile(
-                  tileColor: Color.fromARGB(255, 255 - index * 5, 255 - index * 5, 255 - index * 5),
-                  title: Text(meal.title),
-                  onTap: () {
-                    print('Meals: ${meal.title}');
-                  },
-                );
+                return MealItem(meals[index]);
               },
             )
           : Card(
