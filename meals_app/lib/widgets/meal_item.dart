@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:meals_app/general/extensions.dart';
 import 'package:meals_app/models/meal.dart';
+import 'package:meals_app/screens/meal_details.dart';
+import 'package:meals_app/widgets/meal_item_trait.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class MealItem extends StatelessWidget {
@@ -9,6 +12,8 @@ class MealItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ImageProvider imageProvider = NetworkImage(meal.imageUrl);
+
     return Card(
       margin: const EdgeInsets.all(8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -16,13 +21,13 @@ class MealItem extends StatelessWidget {
       elevation: 2,
       child: InkWell(
         onTap: () {
-          print('Meals: ${meal.title}');
+          Navigator.push(context, MaterialPageRoute(builder: (context) => MealDetailsScreen(meal, imageProvider)));
         },
         child: Stack(
           children: [
             FadeInImage(
               placeholder: MemoryImage(kTransparentImage),
-              image: NetworkImage(meal.imageUrl),
+              image: imageProvider,
               fit: BoxFit.cover,
               height: 200,
               width: double.infinity,
@@ -37,24 +42,35 @@ class MealItem extends StatelessWidget {
                   color: Colors.black54,
                   borderRadius: BorderRadius.circular(16),
                 ),
-                child: Text(
-                  meal.title,
-                  textAlign: TextAlign.center,
-                  softWrap: true,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                child: Column(
+                  children: [
+                    Text(
+                      meal.title,
+                      textAlign: TextAlign.center,
+                      softWrap: true,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        MealItemTrait(Icons.schedule, '${meal.duration} min'),
+                        const SizedBox(width: 12),
+                        MealItemTrait(Icons.work, meal.complexity.name.capitalize()),
+                        const SizedBox(width: 12),
+                        MealItemTrait(Icons.attach_money, meal.affordability.name.capitalize()),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
-            const SizedBox(height: 12),
-            Row(
-              children: [],
-            )
           ],
         ),
       ),
