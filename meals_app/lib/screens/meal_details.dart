@@ -19,7 +19,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
       appBar: AppBar(
         title: Text(widget.meal.title),
       ),
-      body: Center(
+      body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -29,7 +29,43 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
               width: double.infinity,
               height: 300,
               fit: BoxFit.cover,
-            )
+            ),
+            const SizedBox(height: 14),
+            Text(
+              'Ingredients',
+              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 10),
+            for (final ingredient in widget.meal.ingredients)
+              Text(
+                ingredient,
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
+              ),
+            const SizedBox(height: 14),
+            Text(
+              'Steps',
+              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 8),
+            for (final step in widget.meal.steps)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                child: Text(
+                  textAlign: TextAlign.center,
+                  step,
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: Theme.of(context).colorScheme.onBackground,
+                      ),
+                ),
+              ),
           ],
         ),
       ),

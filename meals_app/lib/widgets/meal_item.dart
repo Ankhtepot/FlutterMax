@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:meals_app/general/extensions.dart';
 import 'package:meals_app/models/meal.dart';
-import 'package:meals_app/screens/meal_details.dart';
 import 'package:meals_app/widgets/meal_item_trait.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class MealItem extends StatelessWidget {
-  const MealItem(this.meal, {super.key});
+  const MealItem(this.meal, this.onSelected, {super.key});
 
   final Meal meal;
+  final Function(Meal, ImageProvider) onSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +20,7 @@ class MealItem extends StatelessWidget {
       clipBehavior: Clip.hardEdge, // prevents any ocntent inside card from overflowing
       elevation: 2,
       child: InkWell(
-        onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => MealDetailsScreen(meal, imageProvider)));
-        },
+        onTap: () => onSelected(meal, imageProvider),
         child: Stack(
           children: [
             FadeInImage(
