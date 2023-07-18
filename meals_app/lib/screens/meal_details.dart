@@ -3,10 +3,11 @@ import 'package:meals_app/models/meal.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class MealDetailsScreen extends StatefulWidget {
-  const MealDetailsScreen(this.meal, this.imageProvider, {super.key});
+  const MealDetailsScreen(this.meal, this.imageProvider, this.onToggleFavorite, {super.key});
 
   final Meal meal;
   final ImageProvider imageProvider;
+  final void Function(Meal meal) onToggleFavorite;
 
   @override
   State<MealDetailsScreen> createState() => _MealDetailsScreenState();
@@ -18,6 +19,14 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.meal.title),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.star),
+            onPressed: () {
+              widget.onToggleFavorite(widget.meal);
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
