@@ -21,7 +21,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
         title: Text(widget.meal.title),
         actions: [
           IconButton(
-            icon: Icon(Icons.star),
+            icon: const Icon(Icons.star),
             onPressed: () {
               widget.onToggleFavorite(widget.meal);
             },
