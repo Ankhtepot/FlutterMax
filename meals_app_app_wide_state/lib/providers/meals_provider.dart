@@ -2,8 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals/data/dummy_data.dart';
 import 'package:meals/models/meal.dart';
 
-final Provider<MealsProvider> mealsProvider = Provider<MealsProvider>((ref) {
-  return MealsProvider();
+final Provider<List<Meal>> mealsProvider = Provider<List<Meal>>((ref) {
+  return MealsProvider().meals;
 });
 
 class MealsProvider {
