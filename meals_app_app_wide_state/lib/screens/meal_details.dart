@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals/models/meal.dart';
 import 'package:meals/providers/favorites_provider.dart';
 
-class MealDetailsScreen extends ConsumerWidget {
+class MealDetailsScreen extends ConsumerStatefulWidget {
   const MealDetailsScreen({
     super.key,
     required this.meal,
@@ -13,7 +13,17 @@ class MealDetailsScreen extends ConsumerWidget {
   final Meal meal;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _MealDetailsScreenState();
+}
+
+class _MealDetailsScreenState extends ConsumerState<MealDetailsScreen> {
+  @override
+  Widget build(BuildContext context) {
+    final favoriteMeals = ref.watch(favoriteMealsProvider);
+    final meal = widget.meal;
+
+    final bool isFavorite = favoriteMeals.contains(meal);
+
     return Scaffold(
         appBar: AppBar(title: Text(meal.title), actions: [
           IconButton(
@@ -26,8 +36,10 @@ class MealDetailsScreen extends ConsumerWidget {
                   content: Text(wasAdded ? 'Meal added as a favorite!' : 'Meal removed from favorites!'),
                 ),
               );
+
+              setState(() {});
             },
-            icon: const Icon(Icons.star),
+            icon: Icon(isFavorite ? Icons.star : Icons.star_border),
           )
         ]),
         body: SingleChildScrollView(
