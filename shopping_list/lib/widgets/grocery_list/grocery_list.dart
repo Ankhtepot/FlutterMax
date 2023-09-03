@@ -12,10 +12,7 @@ class GroceryList extends ConsumerWidget {
 
     return ListView.builder(
       itemCount: groceryItems.length,
-      itemBuilder: (context, index) {
-        final item = groceryItems[index];
-        return GroceryListItem(item);
-      },
+      itemBuilder: (context, index) => GroceryListItem(groceryItems[index]),
     );
   }
 }

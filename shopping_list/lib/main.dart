@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shopping_list/screens/groceries_screen.dart';
-import 'package:shopping_list/widgets/grocery_list/grocery_list.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));

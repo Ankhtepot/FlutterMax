@@ -13,7 +13,7 @@ class _GroceriesScreenState extends State<GroceriesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Groceries'),
+        title: const Text('Your Groceries'),
       ),
       body: const Center(
         child: GroceryList(),

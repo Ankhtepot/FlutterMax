@@ -12,15 +12,21 @@ class GroceryListItem extends StatelessWidget {
     return Card(
       child: ListTile(
         dense: true,
-        leading: Icon(
-          Icons.square,
-          color: groceryItem.category.color,
-          size: 30,
+        leading: Container(
+          height: 24,
+          width: 24,
+          decoration: BoxDecoration(
+            color: groceryItem.category.color,
+            borderRadius: BorderRadius.circular(5),
+          ),
+          // my solution:
+          // Icon(
+          //   Icons.square,
+          //   color: groceryItem.category.color,
+          //   size: 30,
         ),
         title: TextLabelMedium(groceryItem.name),
-        trailing: TextLabelMedium(
-          groceryItem.quantity.toString(),
-        ),
+        trailing: TextLabelMedium(groceryItem.quantity.toString()),
       ),
     );
   }
