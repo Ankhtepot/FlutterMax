@@ -1,24 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shopping_list/data/categories.dart';
+import 'package:shopping_list/models/category.dart';
+import 'package:shopping_list/models/grocery_item.dart';
+import 'package:shopping_list/providers/groceries_privider.dart';
 
-class NewItem extends StatefulWidget {
+class NewItem extends ConsumerStatefulWidget {
   const NewItem({super.key});
 
   @override
-  State<NewItem> createState() => _NewItemState();
+  ConsumerState<NewItem> createState() => _NewItemState();
 }
 
-class _NewItemState extends State<NewItem> {
+class _NewItemState extends ConsumerState<NewItem> {
   final _formKey = GlobalKey<FormState>();
 
-  void _saveItem() {
+  var _enteredName = '';
+  var _enteredQuantity = 1;
+  var _enteredCategory = categories[Categories.vegetables]!;
+
+  void _saveItem(GroceriesItemsProvider groceriesItemsProvider) {
     if (_formKey.currentState!.validate()) {
-      // Navigator.of(context).pop();
+      _formKey.currentState!.save();
+      groceriesItemsProvider.add(
+        GroceryItem(
+          id: DateTime.now().toString(),
+          name: _enteredName,
+          quantity: _enteredQuantity,
+          category: _enteredCategory,
+        ),
+      );
+      Navigator.of(context).pop();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final groceryItems = ref.read(groceriesProvider.notifier);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add New Item'),
@@ -42,6 +61,7 @@ class _NewItemState extends State<NewItem> {
 
                     return null;
                   },
+                  onSaved: (newValue) => _enteredName = newValue!,
                 ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -63,12 +83,16 @@ class _NewItemState extends State<NewItem> {
                         decoration: const InputDecoration(
                           labelText: 'Quantity',
                         ),
+                        onSaved: (newValue) => _enteredQuantity = int.parse(newValue!),
                       ),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: DropdownButtonFormField(
-                        onChanged: (value) => print(value),
+                        onChanged: (value) => setState(() {
+                          _enteredCategory = value as Category;
+                        }),
+                        value: _enteredCategory,
                         items: [
                           for (final category in categories.entries)
                             DropdownMenuItem(
@@ -104,7 +128,7 @@ class _NewItemState extends State<NewItem> {
                       child: const Text('Reset'),
                     ),
                     ElevatedButton(
-                      onPressed: _saveItem,
+                      onPressed: () => _saveItem(groceryItems),
                       child: const Text('Add Item'),
                     ),
                   ],

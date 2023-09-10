@@ -2,15 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:shopping_list/screens/new_item.dart';
 import 'package:shopping_list/widgets/grocery_list/grocery_list.dart';
 
-class GroceriesScreen extends StatefulWidget {
+class GroceriesScreen extends StatelessWidget {
   const GroceriesScreen({super.key});
 
-  @override
-  State<GroceriesScreen> createState() => _GroceriesScreenState();
-}
-
-class _GroceriesScreenState extends State<GroceriesScreen> {
-  void _addGroceryItem() {
+  void _addGroceryItem(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(builder: (_) => const NewItem()));
   }
 
@@ -22,7 +17,7 @@ class _GroceriesScreenState extends State<GroceriesScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: _addGroceryItem,
+            onPressed: () => _addGroceryItem(context),
           ),
         ],
       ),
