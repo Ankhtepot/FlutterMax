@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shopping_list/data/categories.dart';
+import 'package:shopping_list/data/http_data.dart';
 import 'package:shopping_list/models/category.dart';
 import 'package:shopping_list/models/grocery_item.dart';
 import 'package:shopping_list/providers/groceries_privider.dart';
@@ -33,7 +36,15 @@ class _NewItemState extends ConsumerState<NewItem> {
         ),
       );
 
-      http.
+      http.post(Uri.https(firebaseRoot, shoppingListJson),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: json.encode({
+            'name': _enteredName,
+            'quantity': _enteredQuantity,
+            'category': _enteredCategory.title,
+          }));
 
       Navigator.of(context).pop();
     }

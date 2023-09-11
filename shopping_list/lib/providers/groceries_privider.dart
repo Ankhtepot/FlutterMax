@@ -6,7 +6,8 @@ final groceriesProvider =
     StateNotifierProvider<GroceriesItemsProvider, List<GroceryItem>>((ref) => GroceriesItemsProvider());
 
 class GroceriesItemsProvider extends StateNotifier<List<GroceryItem>> {
-  GroceriesItemsProvider() : super(groceryItems);
+  GroceriesItemsProvider()
+      : super(groceryItems);
 
   void add(GroceryItem item) {
     state = [...state, item];
