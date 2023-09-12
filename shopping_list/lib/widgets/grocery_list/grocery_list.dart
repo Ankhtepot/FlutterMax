@@ -13,6 +13,12 @@ class GroceryList extends ConsumerStatefulWidget {
 
 class _GroceryListState extends ConsumerState<GroceryList> {
   @override
+  void initState() {
+    super.initState();
+    ref.read(groceriesProvider.notifier).loadItemsAsync();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final groceryItems = ref.watch(groceriesProvider);
     final groceryItemsNotifier = ref.read(groceriesProvider.notifier);
@@ -26,7 +32,9 @@ class _GroceryListState extends ConsumerState<GroceryList> {
             itemBuilder: (context, index) => Dismissible(
               key: ValueKey(groceryItems[index].id),
               direction: DismissDirection.endToStart,
-              onDismissed: (_) => groceryItemsNotifier.remove(groceryItems[index]),
+              onDismissed: (_) {
+                groceryItemsNotifier.remove(groceryItems[index]);
+              },
               background: Container(
                 color: const Color.fromARGB(255, 255, 113, 113),
                 alignment: Alignment.centerRight,

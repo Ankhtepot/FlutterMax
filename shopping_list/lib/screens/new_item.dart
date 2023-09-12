@@ -1,14 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shopping_list/data/categories.dart';
-import 'package:shopping_list/data/http_data.dart';
 import 'package:shopping_list/models/category.dart';
 import 'package:shopping_list/models/grocery_item.dart';
 import 'package:shopping_list/providers/groceries_privider.dart';
-
-import 'package:http/http.dart' as http;
 
 class NewItem extends ConsumerStatefulWidget {
   const NewItem({super.key});
@@ -24,10 +19,11 @@ class _NewItemState extends ConsumerState<NewItem> {
   var _enteredQuantity = 1;
   var _enteredCategory = categories[Categories.vegetables]!;
 
-  void _saveItem(GroceriesItemsProvider groceriesItemsProvider) {
+  void _saveItem(GroceriesItemsProvider groceriesItemsProvider) async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      groceriesItemsProvider.add(
+
+      var response = await groceriesItemsProvider.add(
         GroceryItem(
           id: DateTime.now().toString(),
           name: _enteredName,
@@ -36,17 +32,22 @@ class _NewItemState extends ConsumerState<NewItem> {
         ),
       );
 
-      http.post(Uri.https(firebaseRoot, shoppingListJson),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: json.encode({
-            'name': _enteredName,
-            'quantity': _enteredQuantity,
-            'category': _enteredCategory.title,
-          }));
+      if (response.statusCode == 200) {
+        if (!context.mounted) {
+          return;
+        }
 
-      Navigator.of(context).pop();
+        await groceriesItemsProvider.loadItemsAsync();
+
+        if (!context.mounted) {
+          return;
+        }
+
+        Navigator.of(context).pop();
+        return;
+      }
+
+      print('failed to add item');
     }
   }
 
