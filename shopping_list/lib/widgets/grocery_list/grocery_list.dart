@@ -24,9 +24,17 @@ class _GroceryListState extends ConsumerState<GroceryList> {
     final groceryItemsNotifier = ref.read(groceriesProvider.notifier);
 
     return groceryItems.isEmpty
-        ? const Center(
-            child: TextLabelMedium('No items yet. Add some!'),
-          )
+        ? groceryItemsNotifier.error != null
+            ? Center(
+                child: TextLabelMedium(groceryItemsNotifier.error!),
+              )
+            : groceryItemsNotifier.isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : const Center(
+                    child: TextLabelMedium('No items yet. Add some!'),
+                  )
         : ListView.builder(
             itemCount: groceryItems.length,
             itemBuilder: (context, index) => Dismissible(

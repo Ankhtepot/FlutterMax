@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';
@@ -18,8 +19,17 @@ class GroceriesItemsProvider extends StateNotifier<List<GroceryItem>> {
     state = items;
   }
 
-  Future<Response> add(GroceryItem item) async {
-    return await http.post(Uri.https(firebaseRoot, shoppingListJson),
+  bool isLoading = false;
+  String? error;
+
+  void resetError() {
+    error = null;
+  }
+
+  Future<String?> add(GroceryItem item) async {
+    isLoading = true;
+    error = null;
+    Response response = await http.post(Uri.https(firebaseRoot, shoppingListJson),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -28,12 +38,43 @@ class GroceriesItemsProvider extends StateNotifier<List<GroceryItem>> {
           'quantity': item.quantity,
           'category': item.category.title,
         }));
+
+    isLoading = false;
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body) as Map<String, dynamic>;
+      GroceryItem newItem = GroceryItem(
+        id: data['name'],
+        name: item.name,
+        quantity: item.quantity,
+        category: item.category,
+      );
+
+      state = [...state, newItem];
+    } else {
+      error = 'Failed to add item';
+    }
+
+    return error;
   }
 
-  Future<Response> remove(GroceryItem item) async {
+  Future<String?> remove(GroceryItem item) async {
     final url = Uri.https(firebaseRoot, '$shoppingListJson/${item.id}.json');
-    await http.delete(url);
-    return await loadItemsAsync();
+
+    state = [...state.where((element) => element.id != item.id)];
+
+    isLoading = true;
+    error = null;
+
+    Response response = await http.delete(url);
+
+    isLoading = false;
+
+    if (response.statusCode != 200) {
+      error = 'Failed to remove item';
+    }
+
+    return error;
   }
 
   void update(GroceryItem item) {
@@ -43,12 +84,18 @@ class GroceriesItemsProvider extends StateNotifier<List<GroceryItem>> {
     ];
   }
 
-  Future<Response> loadItemsAsync() async {
+  Future<String?> loadItemsAsync() async {
     final url = Uri.https(firebaseRoot, shoppingListJson);
+
+    isLoading = true;
+    error = null;
+
     final response = await http.get(url);
 
+    isLoading = false;
+
     if (response.statusCode == 200) {
-      final data = json.decode(response.body) as Map<String, dynamic>;
+      final data = response.body == 'null' ? {} : json.decode(response.body) as Map<String, dynamic>;
       final List<GroceryItem> loadedItems = [];
 
       data.forEach((key, value) {
@@ -63,8 +110,11 @@ class GroceriesItemsProvider extends StateNotifier<List<GroceryItem>> {
       });
 
       state = loadedItems;
+    } else {
+      state = [];
+      error = 'Failed to load items';
     }
 
-    return response;
+    return error;
   }
 }
