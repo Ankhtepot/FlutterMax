@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';
@@ -59,9 +58,7 @@ class GroceriesItemsProvider extends StateNotifier<List<GroceryItem>> {
   }
 
   Future<String?> remove(GroceryItem item) async {
-    final url = Uri.https(firebaseRoot, '$shoppingListJson/${item.id}.json');
-
-    state = [...state.where((element) => element.id != item.id)];
+    final url = Uri.https(firebaseRoot, 'shopping_list/${item.id}.json');
 
     isLoading = true;
     error = null;
@@ -72,6 +69,8 @@ class GroceriesItemsProvider extends StateNotifier<List<GroceryItem>> {
 
     if (response.statusCode != 200) {
       error = 'Failed to remove item';
+    } else {
+      state = [...state.where((element) => element.id != item.id)];
     }
 
     return error;
@@ -90,7 +89,15 @@ class GroceriesItemsProvider extends StateNotifier<List<GroceryItem>> {
     isLoading = true;
     error = null;
 
-    final response = await http.get(url);
+    Response response;
+
+    try {
+      response = await http.get(url);
+    } catch (e) {
+      state = [];
+      error = 'Failed to load items';
+      return error;
+    }
 
     isLoading = false;
 

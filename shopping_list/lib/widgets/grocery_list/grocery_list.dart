@@ -23,42 +23,42 @@ class _GroceryListState extends ConsumerState<GroceryList> {
     final groceryItems = ref.watch(groceriesProvider);
     final groceryItemsNotifier = ref.read(groceriesProvider.notifier);
 
-    return groceryItems.isEmpty
-        ? groceryItemsNotifier.error != null
+    return groceryItemsNotifier.isLoading
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
+        : groceryItemsNotifier.error != null
             ? Center(
                 child: TextLabelMedium(groceryItemsNotifier.error!),
               )
-            : groceryItemsNotifier.isLoading
+            : groceryItems.isEmpty
                 ? const Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : const Center(
                     child: TextLabelMedium('No items yet. Add some!'),
                   )
-        : ListView.builder(
-            itemCount: groceryItems.length,
-            itemBuilder: (context, index) => Dismissible(
-              key: ValueKey(groceryItems[index].id),
-              direction: DismissDirection.endToStart,
-              onDismissed: (_) {
-                groceryItemsNotifier.remove(groceryItems[index]);
-              },
-              background: Container(
-                color: const Color.fromARGB(255, 255, 113, 113),
-                alignment: Alignment.centerRight,
-                padding: const EdgeInsets.only(right: 20),
-                margin: const EdgeInsets.symmetric(
-                  horizontal: 15,
-                  vertical: 4,
-                ),
-                child: const Icon(
-                  Icons.delete,
-                  color: Colors.white,
-                  size: 40,
-                ),
-              ),
-              child: GroceryListItem(groceryItems[index]),
-            ),
-          );
+                : ListView.builder(
+                    itemCount: groceryItems.length,
+                    itemBuilder: (context, index) => Dismissible(
+                      key: ValueKey(groceryItems[index].id),
+                      direction: DismissDirection.endToStart,
+                      onDismissed: (_) {
+                        groceryItemsNotifier.remove(groceryItems[index]);
+                      },
+                      background: Container(
+                        color: const Color.fromARGB(255, 255, 113, 113),
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.only(right: 20),
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 15,
+                          vertical: 4,
+                        ),
+                        child: const Icon(
+                          Icons.delete,
+                          color: Colors.white,
+                          size: 40,
+                        ),
+                      ),
+                      child: GroceryListItem(groceryItems[index]),
+                    ),
+                  );
   }
 }
