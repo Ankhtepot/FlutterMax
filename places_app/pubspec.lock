@@ -86,6 +86,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
+  flutter_riverpod:
+    dependency: "direct main"
+    description:
+      name: flutter_riverpod
+      sha256: "1bd39b04f1bcd217a969589777ca6bd642d116e3e5de65c3e6a8e8bdd8b178ec"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -95,10 +103,10 @@ packages:
     dependency: "direct main"
     description:
       name: google_fonts
-      sha256: e20ff62b158b96f392bfc8afe29dee1503c94fbea2cbe8186fd59b756b8ae982
+      sha256: "2776c66b3e97c6cdd58d1bd3281548b074b64f1fd5c8f82391f7456e38849567"
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.0"
+    version: "4.0.5"
   http:
     dependency: transitive
     description:
@@ -220,7 +228,7 @@ packages:
     source: hosted
     version: "2.1.6"
   riverpod:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: riverpod
       sha256: a600120d6f213a9922860eea1abc32597436edd5b2c4e73b91410f8c2af67d22
