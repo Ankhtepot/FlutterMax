@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-void navigateTo(BuildContext context, Function(BuildContext) navigationMethod) =>
+void navigateTo(BuildContext context, Function(BuildContext context) navigationMethod) =>
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => navigationMethod(context)));
 
-void navigatePop(BuildContext context) => Navigator.of(context).pop();
+void navigatePop(BuildContext context, {Object? data}) => Navigator.of(context).pop(data);
