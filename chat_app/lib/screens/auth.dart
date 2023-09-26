@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+final _firebaseAuth = FirebaseAuth.instance;
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -14,14 +17,51 @@ class _AuthScreenState extends State<AuthScreen> {
   var _userEmail = '';
   var _userPassword = '';
 
-  void _submit() {
+  void _submit() async {
     final isValid = _form.currentState!.validate();
     FocusScope.of(context).unfocus();
 
-    if (isValid) {
-      _form.currentState!.save();
-      print(_userEmail);
-      print(_userPassword);
+    if (!isValid) {
+      return;
+    }
+
+    _form.currentState!.save();
+    try {
+      if (_isLogin) {
+        UserCredential credential = await _firebaseAuth.signInWithEmailAndPassword(
+          email: _userEmail,
+          password: _userPassword,
+        );
+
+      } else {
+        final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+          email: _userEmail,
+          password: _userPassword,
+        );
+      }
+    } on FirebaseAuthException catch (error) {
+      String message = 'An error occurred, please check your credentials!';
+      if (error.code == 'email-already-in-use') {
+        message = 'The account already exists for that email.';
+      }
+
+      if (error.message != null) {
+        message = error.message!;
+      }
+
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
+    } catch (error) {
+      print(error);
     }
   }
 
