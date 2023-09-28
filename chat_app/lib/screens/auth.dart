@@ -32,7 +32,6 @@ class _AuthScreenState extends State<AuthScreen> {
           email: _userEmail,
           password: _userPassword,
         );
-
       } else {
         final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
           email: _userEmail,
@@ -43,9 +42,9 @@ class _AuthScreenState extends State<AuthScreen> {
       String message = 'An error occurred, please check your credentials!';
       if (error.code == 'email-already-in-use') {
         message = 'The account already exists for that email.';
-      }
-
-      if (error.message != null) {
+      } else if (error.code == 'INVALID_LOGIN_CREDENTIALS') {
+        message = 'Email or password is incorrect.';
+      } else if (error.message != null) {
         message = error.message!;
       }
 
