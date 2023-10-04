@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:chat_app/widgets/user_image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -16,12 +20,23 @@ class _AuthScreenState extends State<AuthScreen> {
 
   var _userEmail = '';
   var _userPassword = '';
+  File? _selectedImage;
 
   void _submit() async {
     final isValid = _form.currentState!.validate();
     FocusScope.of(context).unfocus();
 
     if (!isValid) {
+      return;
+    }
+
+    if (!isValid || !_isLogin && _selectedImage == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Input valid data or pick an image.'),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
       return;
     }
 
@@ -37,6 +52,12 @@ class _AuthScreenState extends State<AuthScreen> {
           email: _userEmail,
           password: _userPassword,
         );
+
+        // submits an selected image to firebase storage
+        final ref = FirebaseStorage.instance.ref().child('user_images').child('${userCredential.user!.uid}.jpg');
+        await ref.putFile(_selectedImage!);
+        final String url = await ref.getDownloadURL();
+        print(url);
       }
     } on FirebaseAuthException catch (error) {
       String message = 'An error occurred, please check your credentials!';
@@ -96,6 +117,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        if (!_isLogin) UserImagePicker(onPickImage: (pickedImage) => _selectedImage = pickedImage),
                         TextFormField(
                           key: const ValueKey('email'),
                           autocorrect: false,
