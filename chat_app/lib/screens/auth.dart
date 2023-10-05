@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:chat_app/widgets/user_image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,6 +17,7 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   bool _isLogin = true;
+  bool _isAuthenticating = false;
   final _form = GlobalKey<FormState>();
 
   var _userEmail = '';
@@ -41,7 +43,11 @@ class _AuthScreenState extends State<AuthScreen> {
     }
 
     _form.currentState!.save();
+
     try {
+      setState(() {
+        _isAuthenticating = true;
+      });
       if (_isLogin) {
         UserCredential credential = await _firebaseAuth.signInWithEmailAndPassword(
           email: _userEmail,
@@ -56,8 +62,13 @@ class _AuthScreenState extends State<AuthScreen> {
         // submits an selected image to firebase storage
         final ref = FirebaseStorage.instance.ref().child('user_images').child('${userCredential.user!.uid}.jpg');
         await ref.putFile(_selectedImage!);
-        final String url = await ref.getDownloadURL();
-        print(url);
+        final String imageUrl = await ref.getDownloadURL();
+
+        FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
+          'email': _userEmail,
+          'username': 'to be done...',
+          'image_url': imageUrl,
+        });
       }
     } on FirebaseAuthException catch (error) {
       String message = 'An error occurred, please check your credentials!';
@@ -83,6 +94,10 @@ class _AuthScreenState extends State<AuthScreen> {
     } catch (error) {
       print(error);
     }
+
+    setState(() {
+      _isAuthenticating = false;
+    });
   }
 
   @override
@@ -151,21 +166,24 @@ class _AuthScreenState extends State<AuthScreen> {
                           },
                         ),
                         const SizedBox(height: 12),
-                        ElevatedButton(
-                          onPressed: _submit,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                        if (_isAuthenticating) const CircularProgressIndicator(),
+                        if (!_isAuthenticating)
+                          ElevatedButton(
+                            onPressed: _submit,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                            ),
+                            child: Text(_isLogin ? 'Login' : 'Signup'),
                           ),
-                          child: Text(_isLogin ? 'Login' : 'Signup'),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            setState(() {
-                              _isLogin = !_isLogin;
-                            });
-                          },
-                          child: Text(_isLogin ? 'Create an account' : 'I already have an account.'),
-                        ),
+                        if (!_isAuthenticating)
+                          TextButton(
+                            onPressed: () {
+                              setState(() {
+                                _isLogin = !_isLogin;
+                              });
+                            },
+                            child: Text(_isLogin ? 'Create an account' : 'I already have an account.'),
+                          ),
                       ],
                     ),
                   ),
